@@ -1,11 +1,11 @@
 package git.huifrank.processer.util;
 
-import javax.lang.model.element.*;
-import java.util.Collections;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.Element;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ProcessHelper {
 

@@ -2,7 +2,7 @@ package git.huifrank.processer;
 
 
 import com.google.auto.service.AutoService;
-import git.huifrank.annotation.PropertieConvert;
+import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.processer.util.ProcessHelper;
 
 import javax.annotation.processing.*;
@@ -12,8 +12,8 @@ import javax.lang.model.util.Elements;
 import java.util.Map;
 import java.util.Set;
 
-@AutoService(PropertieConvert.class)
-@SupportedAnnotationTypes("PropertieConvert")
+@AutoService(PropertiesConvert.class)
+@SupportedAnnotationTypes("PropertiesConvert")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class ConvertProcessor extends AbstractProcessor {
 
@@ -34,10 +34,11 @@ public class ConvertProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(PropertieConvert.class);
+        Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(PropertiesConvert.class);
 
         elementsAnnotatedWith.forEach(ele->{
-            Map<String,AnnotationValue> annotationParam = ProcessHelper.getAnnotationParam(ele, PropertieConvert.class);
+            Map<String,AnnotationValue> annotationParam = ProcessHelper.getAnnotationParam(ele, PropertiesConvert.class);
+
 
             System.out.println(annotationParam);
 
