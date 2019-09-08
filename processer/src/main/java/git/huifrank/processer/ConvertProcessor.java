@@ -2,6 +2,7 @@ package git.huifrank.processer;
 
 
 import com.google.auto.service.AutoService;
+import com.google.common.collect.ImmutableSet;
 import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.processer.util.ProcessHelper;
 
@@ -29,6 +30,19 @@ public class ConvertProcessor extends AbstractProcessor {
         filer = processingEnvironment.getFiler();
 
 
+    }
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        if (SourceVersion.latest().compareTo(SourceVersion.RELEASE_8) > 0) {
+            return SourceVersion.latest();
+        } else {
+            return SourceVersion.RELEASE_8;
+        }
+    }
+
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        return ImmutableSet.of(PropertiesConvert.class.getCanonicalName());
     }
 
     @Override
