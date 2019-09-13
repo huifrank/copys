@@ -3,8 +3,12 @@ package git.huifrank.processer;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
+import com.sun.source.util.Trees;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.processer.util.ProcessHelper;
+import git.huifrank.processer.visitor.TestVisitor;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -21,6 +25,8 @@ public class ConvertProcessor extends AbstractProcessor {
     private Messager messager;
     private Elements elementUtils;
     private Filer filer;
+    private Trees trees;
+
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
@@ -28,6 +34,7 @@ public class ConvertProcessor extends AbstractProcessor {
         messager = processingEnvironment.getMessager();
         elementUtils = processingEnvironment.getElementUtils();
         filer = processingEnvironment.getFiler();
+        trees = Trees.instance(processingEnv);
 
 
     }
@@ -52,7 +59,10 @@ public class ConvertProcessor extends AbstractProcessor {
 
         elementsAnnotatedWith.forEach(ele->{
             Map<String,AnnotationValue> annotationParam = ProcessHelper.getAnnotationParam(ele, PropertiesConvert.class);
+            Map<String, Type> methodParamNames = ProcessHelper.getMethodParamNames(ele);
 
+            JCTree tree = (JCTree) trees.getTree( ele );
+            tree.accept(new TestVisitor());
 
             System.out.println(annotationParam);
 
