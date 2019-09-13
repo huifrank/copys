@@ -5,7 +5,11 @@ import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Names;
 import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.processer.util.ProcessHelper;
 import git.huifrank.processer.visitor.TestVisitor;
@@ -26,6 +30,8 @@ public class ConvertProcessor extends AbstractProcessor {
     private Elements elementUtils;
     private Filer filer;
     private Trees trees;
+    private TreeMaker treeMaker;
+    private Names names;
 
 
     @Override
@@ -35,6 +41,10 @@ public class ConvertProcessor extends AbstractProcessor {
         elementUtils = processingEnvironment.getElementUtils();
         filer = processingEnvironment.getFiler();
         trees = Trees.instance(processingEnv);
+        Context context =( (JavacProcessingEnvironment) processingEnvironment).getContext();
+        treeMaker = TreeMaker.instance((context));
+        this.names = Names.instance(context);
+
 
 
     }
@@ -62,7 +72,8 @@ public class ConvertProcessor extends AbstractProcessor {
             Map<String, Type> methodParamNames = ProcessHelper.getMethodParamNames(ele);
 
             JCTree tree = (JCTree) trees.getTree( ele );
-            tree.accept(new TestVisitor());
+            tree.accept(new TestVisitor(treeMaker,names));
+
 
             System.out.println(annotationParam);
 
