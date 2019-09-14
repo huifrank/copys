@@ -22,6 +22,14 @@ public class Property {
     }
 
 
+    public String getName() {
+        return name;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
