@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
@@ -35,7 +37,6 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
     public void visitMethodDef(JCTree.JCMethodDecl jcMethodDecl) {
         super.visitMethodDef(jcMethodDecl);
 
-        System.out.println("打印一下试试"+jcMethodDecl.getName());
 
         StatementHelper statementHelper = new StatementHelper(treeMaker,names);
 
@@ -58,12 +59,16 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
         java.util.List<Property> properties = PropertiesHelper.combineGetterAndSetter(getter, setter);
 
-        JCTree.JCExpressionStatement statement = statementHelper.createSetPropertyStatement(properties.get(0), target.get(), source.get());
+        //生成代码
+        java.util.List<JCTree.JCExpressionStatement> statements = properties.stream().map(p -> {
+            return statementHelper.createSetPropertyStatement(p, target.get(), source.get());
+        }).collect(Collectors.toList());
+
 
 
 
         //写入方法
-        jcMethodDecl.body.stats = jcMethodDecl.body.stats.append(statement);
+        jcMethodDecl.body.stats = jcMethodDecl.body.stats.appendList(List.from(statements));
 
     }
 

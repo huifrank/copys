@@ -7,12 +7,26 @@ public class StringUtils {
      * @param str
      * @return
      */
-    public static String lowercaseFirstLetter(String str){
+    public static String lowerCaseFirstLetter(String str){
         if("".equals(str) || null == str){
             return str;
         }
 
         return str.substring(0,1).toLowerCase()+str.substring(1);
+
+    }
+
+    /**
+     * 将首字母转大写
+     * @param str
+     * @return
+     */
+    public static String upperCaseFirstLetter(String str){
+        if("".equals(str) || null == str){
+            return str;
+        }
+
+        return str.substring(0,1).toUpperCase()+str.substring(1);
 
     }
 }

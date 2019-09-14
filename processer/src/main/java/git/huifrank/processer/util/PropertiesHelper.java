@@ -25,7 +25,7 @@ public class PropertiesHelper {
             Type returnType = g.type.getReturnType();
             String name = Objects.toString(g.name);
             //取方法名get/set后面的部分
-            Property property = new Property(StringUtils.lowercaseFirstLetter(name.substring(3)), returnType);
+            Property property = new Property(StringUtils.lowerCaseFirstLetter(name.substring(3)), returnType);
             return property;
 
         }).collect(Collectors.toSet());
@@ -33,7 +33,7 @@ public class PropertiesHelper {
             Type returnType = g.type.getParameterTypes().get(0);
             String name = Objects.toString(g.name);
             //取方法名get/set后面的部分
-            Property property = new Property(StringUtils.lowercaseFirstLetter(name.substring(3)), returnType);
+            Property property = new Property(StringUtils.lowerCaseFirstLetter(name.substring(3)), returnType);
             return property;
 
         }).collect(Collectors.toList());

@@ -1,7 +1,6 @@
 package git.huifrank.processer.util;
 
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
@@ -26,14 +25,27 @@ public class StatementHelper {
 
     public  JCTree.JCExpressionStatement createSetPropertyStatement(Property property, JCTree.JCVariableDecl source , JCTree.JCVariableDecl target){
 
-        String paramType = property.getType().toString();
 
-        JCTree.JCExpressionStatement setMethod = treeMaker.Exec(treeMaker.Apply(
-                List.of(memberAccess(paramType)),//参数类型
-                memberAccess("java.lang.System.out.println"),
-                List.of(treeMaker.Ident(source))
+        //source.getXXX()
+        JCTree.JCExpressionStatement getMethod = treeMaker.Exec(treeMaker.Apply(
+                List.nil(),
+                treeMaker.Select(treeMaker.Ident(source.sym.name)
+                        ,getNameFromString("get"+StringUtils.upperCaseFirstLetter(property.getName()))
+                ),
+                List.nil()
                 )
         );
+
+        //target.setXXX(source.getXXX())
+        JCTree.JCExpressionStatement setMethod = treeMaker.Exec(treeMaker.Apply(
+                List.of(treeMaker.Type(property.getType())),
+                treeMaker.Select(treeMaker.Ident(source.sym.name)
+                        ,getNameFromString("set"+StringUtils.upperCaseFirstLetter(property.getName()))
+                ),
+                List.of(getMethod.expr)
+                )
+        );
+
 
         return setMethod;
 
