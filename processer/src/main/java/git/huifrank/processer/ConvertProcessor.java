@@ -3,6 +3,9 @@ package git.huifrank.processer;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
@@ -12,12 +15,13 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Names;
 import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.processer.util.ProcessHelper;
-import git.huifrank.processer.visitor.TestVisitor;
+import git.huifrank.processer.visitor.GeneratePropertiesCopyVisitor;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.*;
 import javax.lang.model.util.Elements;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,12 +71,12 @@ public class ConvertProcessor extends AbstractProcessor {
 
         Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(PropertiesConvert.class);
 
+        //遍历被当前注解修饰的元素
         elementsAnnotatedWith.forEach(ele->{
             Map<String,AnnotationValue> annotationParam = ProcessHelper.getAnnotationParam(ele, PropertiesConvert.class);
-            Map<String, Type> methodParamNames = ProcessHelper.getMethodParamNames(ele);
 
             JCTree tree = (JCTree) trees.getTree( ele );
-            tree.accept(new TestVisitor(treeMaker,names));
+            tree.accept(new GeneratePropertiesCopyVisitor(treeMaker,names,annotationParam));
 
 
             System.out.println(annotationParam);
