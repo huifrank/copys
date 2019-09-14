@@ -11,10 +11,14 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.StringUtils;
 import git.huifrank.annotation.PropertiesConvert;
+import git.huifrank.processer.bean.Property;
+import git.huifrank.processer.util.ProcessHelper;
+import git.huifrank.processer.util.PropertiesHelper;
 
 import javax.lang.model.element.AnnotationValue;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,6 +61,7 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
         java.util.List<Symbol> setter = getMethodStartWith(targetIte, "set");
         java.util.List<Symbol> getter = getMethodStartWith(sourceIte, "get");
 
+        java.util.List<Property> properties = PropertiesHelper.combineGetterAndSetter(getter, setter);
 
         JCTree.JCExpressionStatement statement = treeMaker.Exec(treeMaker.Apply(
                 List.of(memberAccess("java.lang.String")),//参数类型
@@ -100,8 +105,7 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
      */
     private Optional<JCTree.JCVariableDecl> selectTargetParam(List<JCTree.JCVariableDecl> param, AnnotationValue target ){
         return param.stream().filter(decl ->{
-            return decl.sym.type.equals(
-                    ((Attribute.Class) target).getValue());
+            return Objects.equals(decl.sym.type, ((Attribute.Class) target).getValue());
 
         }).findFirst();
     }
