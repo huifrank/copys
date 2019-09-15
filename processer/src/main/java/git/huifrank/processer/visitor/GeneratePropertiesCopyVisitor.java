@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
@@ -49,9 +48,10 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
         Optional<JCTree.JCVariableDecl> source = selectTargetParam(methodParam, from);
         Optional<JCTree.JCVariableDecl> target = selectTargetParam(methodParam, to);
+
         //得到成员迭代器
-        Iterator<Symbol> sourceIte = source.get().sym.type.tsym.members().getElements().iterator();
-        Iterator<Symbol> targetIte = target.get().sym.type.tsym.members().getElements().iterator();
+        Iterator<Symbol> sourceIte = PropertiesHelper.getSymbolsIncludeParent(source);
+        Iterator<Symbol> targetIte = PropertiesHelper.getSymbolsIncludeParent(source);
 
         //遍历入参类中所有成员  取出setters/getters
         java.util.List<Symbol> setter = statementHelper.getMethodStartWith(targetIte, "set");

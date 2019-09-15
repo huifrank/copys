@@ -1,6 +1,6 @@
 package git.huifrank.copys;
 
-public class BankCardDO {
+public class BankCardDO extends Basebean {
     private String id;
     private String name;
     private Long userId;

@@ -3,7 +3,7 @@ package git.huifrank.copys;
 
 import com.google.common.base.MoreObjects;
 
-public class BankCardDTO {
+public class BankCardDTO extends Basebean {
     private String id;
     private String name;
     private Long userId;

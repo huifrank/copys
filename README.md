@@ -31,12 +31,19 @@
 
         public void convertDO2DTO(BankCardDO cardDO, BankCardDTO bankCardDTO) {
             bankCardDTO.setUserId(bankCardDTO.getUserId());
+            bankCardDTO.setSystem(bankCardDTO.getSystem());
             bankCardDTO.setId(bankCardDTO.getId());
             bankCardDTO.setName(bankCardDTO.getName());
         }
     }
     
-    
+
+请注意 其中system属性继承自父类BaseBean
+
+    public abstract class Basebean {
+
+        private String system;    
+    }
 
 后续会支持更多功能 
 

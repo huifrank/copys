@@ -2,14 +2,13 @@ package git.huifrank.processer.util;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import git.huifrank.processer.bean.Property;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class PropertiesHelper {
 
@@ -43,5 +42,43 @@ public class PropertiesHelper {
 
 
     }
+
+    public static Iterator<Symbol> getSymbolsIncludeParent(Optional<JCTree.JCVariableDecl> variableDecl){
+
+        List<Iterator<Symbol>> superMembers = getSuperSymbols((Type.ClassType) ((Type.ClassType) variableDecl.get().sym.type).supertype_field);
+
+        Iterator<Symbol> myMembers = variableDecl.get().sym.type.tsym.members().getElements().iterator();
+
+        //合并结果
+        superMembers.add(myMembers);
+        return superMembers.stream().flatMap(i -> {
+            Iterable<Symbol> iterable = () -> i;
+            return StreamSupport.stream(iterable.spliterator(), false);
+        }).collect(Collectors.toList()).iterator();
+
+    }
+
+    private static List<Iterator<Symbol>> getSuperSymbols(Type.ClassType classType){
+        if("java.lang.Object".equals(classType.tsym.type.toString())    ||
+           "none".equals(Objects.toString(classType.supertype_field)) ) {
+            //如果没有父类  或 父类是Object时  (Object没有父类)
+            return Collections.EMPTY_LIST;
+        }
+        List<Iterator<Symbol>> res = new ArrayList<>();
+
+
+        Iterator<Symbol> elements = classType.tsym.members().getElements().iterator();
+        List<Iterator<Symbol>> superSymbols = getSuperSymbols((Type.ClassType) classType.supertype_field);
+        if(elements.hasNext()){
+            res.add(elements);
+        }
+        res.addAll(superSymbols);
+        return res;
+    }
+
+
+
+
+
 
 }
