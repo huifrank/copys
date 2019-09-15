@@ -39,7 +39,7 @@ public class StatementHelper {
         //target.setXXX(source.getXXX())
         JCTree.JCExpressionStatement setMethod = treeMaker.Exec(treeMaker.Apply(
                 List.of(treeMaker.Type(property.getType())),
-                treeMaker.Select(treeMaker.Ident(source.sym.name)
+                treeMaker.Select(treeMaker.Ident(target.sym.name)
                         ,getNameFromString("set"+StringUtils.upperCaseFirstLetter(property.getName()))
                 ),
                 List.of(getMethod.expr)

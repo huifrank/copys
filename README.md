@@ -30,10 +30,10 @@
         }
 
         public void convertDO2DTO(BankCardDO cardDO, BankCardDTO bankCardDTO) {
-            bankCardDTO.setUserId(bankCardDTO.getUserId());
-            bankCardDTO.setSystem(bankCardDTO.getSystem());
-            bankCardDTO.setId(bankCardDTO.getId());
-            bankCardDTO.setName(bankCardDTO.getName());
+             bankCardDTO.setName(cardDO.getName());
+             bankCardDTO.setUserId(cardDO.getUserId());
+             bankCardDTO.setSystem(cardDO.getSystem());
+             bankCardDTO.setId(cardDO.getId());
         }
     }
     

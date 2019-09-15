@@ -61,7 +61,7 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
         //生成代码
         java.util.List<JCTree.JCExpressionStatement> statements = properties.stream().map(p -> {
-            return statementHelper.createSetPropertyStatement(p, target.get(), source.get());
+            return statementHelper.createSetPropertyStatement(p, source.get(), target.get());
         }).collect(Collectors.toList());
 
 
