@@ -1,13 +1,10 @@
 package git.huifrank.copys.handler;
 
-
 import git.huifrank.handler.PropertiesMapper;
 
-
-public class MobileHandler implements PropertiesMapper<String> {
-
+public class NameHandler implements PropertiesMapper {
     @Override
-    public String apply(String obj) {
+    public String apply(Object obj) {
         return null;
     }
 }

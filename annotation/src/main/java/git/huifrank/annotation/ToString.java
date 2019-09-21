@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 public @interface ToString {
 
 
-    ToStringBuilder hander();
+    ToStringBuilder[] handler() ;
 }
