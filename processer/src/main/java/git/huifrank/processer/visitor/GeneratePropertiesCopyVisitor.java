@@ -51,7 +51,7 @@ public class GeneratePropertiesCopyVisitor extends TreeTranslator {
 
         //得到成员迭代器
         Iterator<Symbol> sourceIte = PropertiesHelper.getSymbolsIncludeParent(source);
-        Iterator<Symbol> targetIte = PropertiesHelper.getSymbolsIncludeParent(source);
+        Iterator<Symbol> targetIte = PropertiesHelper.getSymbolsIncludeParent(target);
 
         //遍历入参类中所有成员  取出setters/getters
         java.util.List<Symbol> setter = statementHelper.getMethodStartWith(targetIte, "set");

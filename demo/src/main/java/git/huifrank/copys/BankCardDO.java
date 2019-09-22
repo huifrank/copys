@@ -1,18 +1,14 @@
 package git.huifrank.copys;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.google.common.collect.Maps;
 import git.huifrank.annotation.ToString;
 import git.huifrank.copys.handler.MobileHandler;
 import git.huifrank.copys.handler.NameHandler;
-import git.huifrank.handler.ToStringBuilder;
 
 
 @ToString(
         handler = {
-                @ToStringBuilder(mapper = MobileHandler.class,propertyName = "mobile"),
-                @ToStringBuilder(mapper = NameHandler.class,propertyName = "name")
+                @ToString.ToStringMapper(mapper = MobileHandler.class,propertyName = "mobile"),
+                @ToString.ToStringMapper(mapper = NameHandler.class,propertyName = "name")
         }
 )
 public class BankCardDO extends Basebean {

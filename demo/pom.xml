@@ -34,7 +34,8 @@
                             <source>1.8</source>
                             <target>1.8</target>
                             <annotationProcessors>
-                                <annotationProcessor>git.huifrank.processer.ConvertProcessor</annotationProcessor>
+                                <annotationProcessor>git.huifrank.processer.PropertiesConvertProcessor</annotationProcessor>
+                                <annotationProcessor>git.huifrank.processer.ToStringProcessor</annotationProcessor>
                             </annotationProcessors>
                         </configuration>
                     </execution>

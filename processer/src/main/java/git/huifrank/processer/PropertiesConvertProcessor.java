@@ -28,7 +28,7 @@ import java.util.Set;
 @AutoService(PropertiesConvert.class)
 @SupportedAnnotationTypes("PropertiesConvert")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-public class ConvertProcessor extends AbstractProcessor {
+public class PropertiesConvertProcessor extends AbstractProcessor {
 
     private Messager messager;
     private Elements elementUtils;
@@ -48,8 +48,6 @@ public class ConvertProcessor extends AbstractProcessor {
         Context context =( (JavacProcessingEnvironment) processingEnvironment).getContext();
         treeMaker = TreeMaker.instance((context));
         this.names = Names.instance(context);
-
-
 
     }
     @Override
@@ -79,13 +77,11 @@ public class ConvertProcessor extends AbstractProcessor {
             tree.accept(new GeneratePropertiesCopyVisitor(treeMaker,names,annotationParam));
 
 
-            System.out.println(annotationParam);
 
         });
 
 
 
-        System.out.println("-------------process------------");
 
         return false;
     }

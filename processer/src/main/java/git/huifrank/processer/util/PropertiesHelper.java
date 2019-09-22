@@ -37,7 +37,9 @@ public class PropertiesHelper {
 
         }).collect(Collectors.toList());
 
-       return Stream.of(get, set).flatMap(Collection::stream).distinct().collect(Collectors.toList());
+        //取交集
+       get.retainAll(set);
+       return new ArrayList(get);
 
 
 
