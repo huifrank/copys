@@ -49,4 +49,14 @@ public class BankCardDO extends Basebean {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "BankCardDO{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", userId=" + userId +
+                ", mobile='" + mobile + '\'' +
+                '}';
+    }
 }

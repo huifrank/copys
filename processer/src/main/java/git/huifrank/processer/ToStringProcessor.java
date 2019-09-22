@@ -11,6 +11,7 @@ import com.sun.tools.javac.util.Names;
 import git.huifrank.annotation.PropertiesConvert;
 import git.huifrank.annotation.ToString;
 import git.huifrank.processer.util.ProcessHelper;
+import git.huifrank.processer.visitor.CreateToStringMethodVisitor;
 import git.huifrank.processer.visitor.GeneratePropertiesCopyVisitor;
 
 import javax.annotation.processing.*;
@@ -64,6 +65,8 @@ public class ToStringProcessor  extends AbstractProcessor {
         elementsAnnotatedWith.forEach(ele->{
             Map<String, AnnotationValue> annotationParam = ProcessHelper.getAnnotationParam(ele, ToString.class);
 
+            JCTree tree = (JCTree) trees.getTree( ele );
+            tree.accept(new CreateToStringMethodVisitor(treeMaker,names,annotationParam));
 
 
             System.out.println(annotationParam);

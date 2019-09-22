@@ -3,6 +3,7 @@ package git.huifrank.processer.util;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -41,6 +42,18 @@ public class ProcessHelper {
 
         return res;
 
+    }
+
+    /**
+     * todo
+     * @param jcClassDecl
+     * @param methodName
+     * @param paramTypes
+     * @param resType
+     * @return
+     */
+    public static boolean hasMethod(JCTree.JCClassDecl jcClassDecl, String methodName, java.util.List<String> paramTypes, String resType){
+        return true;
     }
 
 
