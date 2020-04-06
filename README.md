@@ -38,7 +38,7 @@
     }
     
 
-如果运行失败 请坚持pom中tools.jar的依赖路径是否正确
+如果运行失败 请检查pom中tools.jar的依赖路径是否正确
 
       
       <dependency>
