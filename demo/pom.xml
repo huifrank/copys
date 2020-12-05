@@ -36,6 +36,7 @@
                             <annotationProcessors>
                                 <annotationProcessor>git.huifrank.processer.PropertiesConvertProcessor</annotationProcessor>
                                 <annotationProcessor>git.huifrank.processer.ToStringProcessor</annotationProcessor>
+                                <annotationProcessor>git.huifrank.processer.AroundSlf4jProcessor</annotationProcessor>
                             </annotationProcessors>
                         </configuration>
                     </execution>
