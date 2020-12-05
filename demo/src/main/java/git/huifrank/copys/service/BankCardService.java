@@ -5,5 +5,5 @@ import git.huifrank.copys.BankCardDTO;
 public interface BankCardService {
 
 
-    void saveBankCard(BankCardDTO bankCardDTO);
+    int saveBankCard(BankCardDTO bankCardDTO);
 }

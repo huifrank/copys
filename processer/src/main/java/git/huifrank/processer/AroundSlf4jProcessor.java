@@ -4,6 +4,8 @@ import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.code.Scope;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -11,6 +13,7 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Names;
 import git.huifrank.annotation.AroundSlf4j;
 import git.huifrank.processer.visitor.AroundSlf4jVisitor;
+import org.slf4j.Logger;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -18,6 +21,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import java.util.Iterator;
 import java.util.Set;
 
 @AutoService(AroundSlf4j.class)
@@ -50,8 +54,9 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
 
             if(ele.getKind() == ElementKind.METHOD){
 
-                JCTree tree = (JCTree) trees.getTree(ele);
-                tree.accept(new AroundSlf4jVisitor(treeMaker,names));
+            JCTree tree = (JCTree) trees.getTree(ele);
+            Symbol.VarSymbol logger = getAvailableFieldInMethod(((JCTree.JCMethodDecl) tree), Logger.class, "logger");
+            tree.accept(new AroundSlf4jVisitor(treeMaker,names,logger));
 
 
             }
@@ -60,6 +65,21 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
 
 
             return false;
+    }
+    private Symbol.VarSymbol getAvailableFieldInMethod(JCTree.JCMethodDecl jcMethodDecl,Class target,String name){
+        Scope members = jcMethodDecl.sym.owner.members();
+        Iterator<Symbol> iterator = members.getElements().iterator();
+        while (iterator.hasNext()){
+            Symbol next = iterator.next();
+            if(ElementKind.FIELD.equals(next.getKind()) && next.getQualifiedName().toString().equals(name)
+                && next.type.tsym.getQualifiedName().toString().equals(target.getName())){
+
+                return (Symbol.VarSymbol) next;
+            }
+
+        }
+        return null;
+
     }
 
 
