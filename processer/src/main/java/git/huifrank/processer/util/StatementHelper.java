@@ -4,9 +4,11 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import git.huifrank.processer.bean.Property;
+import jdk.nashorn.internal.codegen.types.Type;
 
 import java.util.Iterator;
 import java.util.stream.Collectors;
@@ -26,6 +28,14 @@ public class StatementHelper {
 
     public JCTree.JCExpressionStatement createEndLoggingStatementByReturn(Symbol.VarSymbol logger,JCTree.JCReturn jcReturn){
 
+        ListBuffer loggerArgs = new ListBuffer<JCTree.JCExpression>();
+        loggerArgs.add(treeMaker.Literal("end {}"));
+        switch (jcReturn.expr.getTag()){
+            case LITERAL:
+                loggerArgs.add(treeMaker.Literal(((JCTree.JCLiteral) jcReturn.expr).getValue()));
+            default:
+                System.out.println(jcReturn);
+        }
 
 
         JCTree.JCExpressionStatement endLogging = treeMaker.Exec(treeMaker.Apply(
@@ -33,7 +43,7 @@ public class StatementHelper {
                 //调用方法
                 treeMaker.Select(treeMaker.Ident(logger.name),names.fromString("info")),
                 //入参
-                List.of(treeMaker.Literal("end"))
+                loggerArgs.toList()
                 )
         );
         return endLogging;
