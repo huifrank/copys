@@ -51,7 +51,7 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
         Set<? extends Element> elementsAnnotatedWith = roundEnv.getElementsAnnotatedWith(AroundSlf4j.class);
         elementsAnnotatedWith.forEach(ele->{
 
-            if(ele.getKind() == ElementKind.METHOD){
+            if(ele.getKind() == ElementKind.METHOD && !((Symbol.MethodSymbol) ele).owner.isInterface()){
 
                 JCTree tree = (JCTree) trees.getTree(ele);
                 Symbol.VarSymbol logger = getAvailableFieldInMethod(((JCTree.JCMethodDecl) tree), Logger.class, "logger");

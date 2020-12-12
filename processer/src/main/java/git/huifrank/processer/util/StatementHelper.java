@@ -33,6 +33,11 @@ public class StatementHelper {
         switch (jcReturn.expr.getTag()){
             case LITERAL:
                 loggerArgs.add(treeMaker.Literal(((JCTree.JCLiteral) jcReturn.expr).getValue()));
+                break;
+            case IDENT:
+                loggerArgs.add(treeMaker.Ident(((JCTree.JCIdent) jcReturn.expr).getName()));
+                break;
+
             default:
                 System.out.println(jcReturn);
         }

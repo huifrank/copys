@@ -18,13 +18,27 @@ public class BankCardServiceImpl implements BankCardService {
             return 0;
         }else if(bankCardDTO == new Object()){
             return 1;
-        }else {
-            System.out.println(1);
         }
-
 
         System.out.println(2);
         return 2;
+    }
+    @Override
+    @AroundSlf4j
+    public BankCardDTO queryById(long id){
+        BankCardDTO bankCardDTO = new BankCardDTO();
+        for(int i =0 ; i< 10 ;i++){
+            if(i > 10){
+                return bankCardDTO;
+            }
+
+            if(i< 11){
+                return bankCardDTO;
+            }
+        }
+
+
+        return bankCardDTO;
 
     }
 
