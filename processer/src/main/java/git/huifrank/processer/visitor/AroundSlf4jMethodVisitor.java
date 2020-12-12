@@ -56,18 +56,15 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
     }
 
 
-    private void walkReturnExpression(List<JCTree.JCStatement> methodStatement){
-        for(int i = 0 ;i< methodStatement.size();i++){
-            JCTree.JCStatement jcStatement = methodStatement.get(i);
+    private void walkReturnExpression(List<JCTree.JCStatement> statement){
+        for(int i = 0 ;i< statement.size();i++){
+            JCTree.JCStatement jcStatement = statement.get(i);
             switch (jcStatement.getKind()){
                 case IF:
                     ((JCTree.JCIf)jcStatement).getThenStatement().accept(new AroundSlf4jBlockVisitor(treeMaker,names,logger));
                     JCTree.JCStatement current = ((JCTree.JCIf)jcStatement).getElseStatement();
-                    while (current != null){
-                        current.accept(new AroundSlf4jBlockVisitor(treeMaker, names, logger));
-                        current = current.getKind() == Tree.Kind.IF?   ((JCTree.JCIf)current).getElseStatement():  null;
+                    walkReturnExpression(List.of(current));
 
-                    }
                 default:
                     System.out.println(jcStatement);
 
