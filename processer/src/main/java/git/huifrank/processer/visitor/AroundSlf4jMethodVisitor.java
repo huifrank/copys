@@ -1,5 +1,6 @@
 package git.huifrank.processer.visitor;
 
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -10,6 +11,7 @@ import com.sun.tools.javac.util.Names;
 import git.huifrank.processer.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -32,7 +34,7 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
         List<JCTree.JCVariableDecl> methodParam = jcMethodDecl.params;
 
 
-        JCTree.JCLiteral format = treeMaker.Literal((genParamsLogFormat(methodParam)));
+        JCTree.JCLiteral format = treeMaker.Literal(genMethodNameLogFormat(jcMethodDecl) + genParamsLogFormat(methodParam));
         ListBuffer loggerArgs = new ListBuffer<JCTree.JCExpression>();
         loggerArgs.add(format);
         loggerArgs.addAll(convertVar2Exp(methodParam));
@@ -60,10 +62,17 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
             switch (jcStatement.getKind()){
                 case IF:
                     ((JCTree.JCIf)jcStatement).getThenStatement().accept(new AroundSlf4jBlockVisitor(treeMaker,names,logger));
+                    JCTree.JCStatement current = ((JCTree.JCIf)jcStatement).getElseStatement();
+                    while (current != null){
+                        current.accept(new AroundSlf4jBlockVisitor(treeMaker, names, logger));
+                        current = current.getKind() == Tree.Kind.IF?   ((JCTree.JCIf)current).getElseStatement():  null;
+
+                    }
                 default:
                     System.out.println(jcStatement);
+
             }
-            System.out.println(jcStatement);
+
         }
 
     }
@@ -80,6 +89,11 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
         return listBuffer.toList();
     }
 
+    private String genMethodNameLogFormat(JCTree.JCMethodDecl methodDecl){
+
+        return methodDecl.sym.owner.getSimpleName() + methodDecl.getName().toString();
+
+    }
 
     private String genParamsLogFormat(List<JCTree.JCVariableDecl> methodParam){
 

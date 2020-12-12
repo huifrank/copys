@@ -16,11 +16,15 @@ public class BankCardServiceImpl implements BankCardService {
     public int saveBankCard(BankCardDTO bankCardDTO){
         if(bankCardDTO == null){
             return 0;
+        }else if(bankCardDTO == new Object()){
+            return 1;
+        }else {
+            System.out.println(1);
         }
 
 
-        System.out.println(bankCardDTO);
-        return 1;
+        System.out.println(2);
+        return 2;
 
     }
 
