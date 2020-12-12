@@ -14,10 +14,13 @@ public class BankCardServiceImpl implements BankCardService {
     @Override
     @AroundSlf4j
     public int saveBankCard(BankCardDTO bankCardDTO){
+        if(bankCardDTO == null){
+            return 0;
+        }
 
 
         System.out.println(bankCardDTO);
-        return 0;
+        return 1;
 
     }
 

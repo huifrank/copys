@@ -13,13 +13,13 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
-public class AroundSlf4jVisitor extends TreeTranslator {
+public class AroundSlf4jMethodVisitor extends TreeTranslator {
 
     private TreeMaker treeMaker;
     private Names names;
     private Symbol.VarSymbol logger;
 
-    public AroundSlf4jVisitor(TreeMaker treeMaker, Names names, Symbol.VarSymbol logger){
+    public AroundSlf4jMethodVisitor(TreeMaker treeMaker, Names names, Symbol.VarSymbol logger){
         this.treeMaker = treeMaker;
         this.names = names;
         this.logger = logger;
@@ -33,10 +33,10 @@ public class AroundSlf4jVisitor extends TreeTranslator {
 
 
         JCTree.JCLiteral format = treeMaker.Literal((genParamsLogFormat(methodParam)));
-        ListBuffer loggerArgs = new ListBuffer<>();
+        ListBuffer loggerArgs = new ListBuffer<JCTree.JCExpression>();
         loggerArgs.add(format);
         loggerArgs.addAll(convertVar2Exp(methodParam));
-        JCTree.JCExpressionStatement logState = treeMaker.Exec(treeMaker.Apply(
+        JCTree.JCExpressionStatement beforeState = treeMaker.Exec(treeMaker.Apply(
                 List.nil(),
                 //调用方法
                 treeMaker.Select(treeMaker.Ident(logger.name),names.fromString("info")),
@@ -44,12 +44,34 @@ public class AroundSlf4jVisitor extends TreeTranslator {
                 loggerArgs.toList()
                 )
         );
-
         //before
-        jcMethodDecl.body.stats = jcMethodDecl.body.stats.prepend(logState);
+        jcMethodDecl.body.stats = jcMethodDecl.body.stats.prepend(beforeState);
+
+        walkReturnExpression(jcMethodDecl.body.stats);
+
+        //end
 
     }
-    private List convertVar2Exp(List<JCTree.JCVariableDecl> methodParam ){
+
+
+    private void walkReturnExpression(List<JCTree.JCStatement> methodStatement){
+        for(int i = 0 ;i< methodStatement.size();i++){
+            JCTree.JCStatement jcStatement = methodStatement.get(i);
+            switch (jcStatement.getKind()){
+                case IF:
+                    ((JCTree.JCIf)jcStatement).getThenStatement().accept(new AroundSlf4jBlockVisitor(treeMaker,names,logger));
+                default:
+                    System.out.println(jcStatement);
+            }
+            System.out.println(jcStatement);
+        }
+
+    }
+
+    /**
+     * 生成入参日志参数列表
+     */
+    private List<JCTree.JCExpression> convertVar2Exp(List<JCTree.JCVariableDecl> methodParam ){
         ListBuffer listBuffer = new ListBuffer();
         methodParam.stream().forEach( param -> {
 
@@ -58,24 +80,7 @@ public class AroundSlf4jVisitor extends TreeTranslator {
         return listBuffer.toList();
     }
 
-    /**
-     * 对入参参数生成toString调用
-     * @param methodParam
-     * @return
-     */
-    private List genParamsInvokeToString(List<JCTree.JCVariableDecl> methodParam){
-        ListBuffer listBuffer = new ListBuffer();
-        methodParam.forEach(param ->{
-            JCTree.JCMethodInvocation toString = treeMaker.Apply(
-                    List.nil(),
-                    treeMaker.Select(treeMaker.Ident(param.name), names.fromString("toString")),
-                    List.nil()
-            );
-            listBuffer.add(toString);
 
-        });
-        return listBuffer.toList();
-    }
     private String genParamsLogFormat(List<JCTree.JCVariableDecl> methodParam){
 
         StringBuilder format = new StringBuilder();

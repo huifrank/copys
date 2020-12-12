@@ -23,6 +23,27 @@ public class StatementHelper {
         this.names = names;
     }
 
+
+    public JCTree.JCExpressionStatement createEndLoggingStatementByReturn(Symbol.VarSymbol logger,JCTree.JCReturn jcReturn){
+
+
+
+        JCTree.JCExpressionStatement endLogging = treeMaker.Exec(treeMaker.Apply(
+                List.nil(),
+                //调用方法
+                treeMaker.Select(treeMaker.Ident(logger.name),names.fromString("info")),
+                //入参
+                List.of(treeMaker.Literal("end"))
+                )
+        );
+        return endLogging;
+
+    }
+
+
+    /**
+     * 创建beans赋值语句 target.setProperty(source.getProperty)
+     */
     public  JCTree.JCExpressionStatement createSetPropertyStatement(Property property, JCTree.JCVariableDecl source , JCTree.JCVariableDecl target){
 
 

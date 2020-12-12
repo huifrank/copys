@@ -2,7 +2,6 @@ package git.huifrank.processer;
 
 import com.google.auto.service.AutoService;
 import com.google.common.collect.ImmutableSet;
-import com.sun.source.tree.Tree;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
@@ -12,7 +11,7 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Names;
 import git.huifrank.annotation.AroundSlf4j;
-import git.huifrank.processer.visitor.AroundSlf4jVisitor;
+import git.huifrank.processer.visitor.AroundSlf4jMethodVisitor;
 import org.slf4j.Logger;
 
 import javax.annotation.processing.*;
@@ -54,10 +53,9 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
 
             if(ele.getKind() == ElementKind.METHOD){
 
-            JCTree tree = (JCTree) trees.getTree(ele);
-            Symbol.VarSymbol logger = getAvailableFieldInMethod(((JCTree.JCMethodDecl) tree), Logger.class, "logger");
-            tree.accept(new AroundSlf4jVisitor(treeMaker,names,logger));
-
+                JCTree tree = (JCTree) trees.getTree(ele);
+                Symbol.VarSymbol logger = getAvailableFieldInMethod(((JCTree.JCMethodDecl) tree), Logger.class, "logger");
+                tree.accept(new AroundSlf4jMethodVisitor(treeMaker,names,logger));
 
             }
 
