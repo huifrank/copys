@@ -8,7 +8,9 @@ import com.sun.tools.javac.tree.TreeTranslator;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Names;
+import git.huifrank.processer.util.StatementHelper;
 import git.huifrank.processer.util.StringUtils;
+import git.huifrank.processer.util.SunListUtils;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -52,6 +54,12 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
         walkReturnExpression(jcMethodDecl.body.stats);
 
         //end
+        jcMethodDecl.body.stats.stream().filter( c-> Tree.Kind.RETURN == c.getKind() ).findFirst().ifPresent( r->{
+            StatementHelper statementHelper = new StatementHelper(treeMaker,names);
+            JCTree.JCExpressionStatement endLogging = statementHelper.createEndLoggingStatementByReturn(logger, (JCTree.JCReturn) r);
+            jcMethodDecl.body.stats = SunListUtils.prependBeforeItem(jcMethodDecl.body.stats.iterator(),endLogging,r);
+        });
+
 
     }
 
@@ -64,6 +72,7 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
                     ((JCTree.JCIf)jcStatement).getThenStatement().accept(new AroundSlf4jBlockVisitor(treeMaker,names,logger));
                     JCTree.JCStatement current = ((JCTree.JCIf)jcStatement).getElseStatement();
                     walkReturnExpression(List.of(current));
+                case RETURN:
 
                 default:
                     System.out.println(jcStatement);
