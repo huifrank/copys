@@ -54,6 +54,7 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
             if(ele.getKind() == ElementKind.METHOD && !((Symbol.MethodSymbol) ele).owner.isInterface()){
 
                 JCTree tree = (JCTree) trees.getTree(ele);
+                //slf4j
                 Symbol.VarSymbol logger = getAvailableFieldInMethod(((JCTree.JCMethodDecl) tree), Logger.class, "logger");
                 tree.accept(new AroundSlf4jMethodVisitor(treeMaker,names,logger));
 
@@ -64,6 +65,14 @@ public class AroundSlf4jProcessor extends AbstractProcessor {
 
             return false;
     }
+
+    /**
+     * 获取可访问到的成员属性
+     * @param jcMethodDecl
+     * @param target
+     * @param name
+     * @return
+     */
     private Symbol.VarSymbol getAvailableFieldInMethod(JCTree.JCMethodDecl jcMethodDecl,Class target,String name){
         Scope members = jcMethodDecl.sym.owner.members();
         Iterator<Symbol> iterator = members.getElements().iterator();

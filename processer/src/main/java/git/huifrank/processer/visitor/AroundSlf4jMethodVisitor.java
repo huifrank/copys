@@ -64,6 +64,10 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
     }
 
 
+    /**
+     * 递归处理语句
+     * @param statement
+     */
     private void walkReturnExpression(List<JCTree.JCStatement> statement){
         for(int i = 0 ;i< statement.size();i++){
             JCTree.JCStatement jcStatement = statement.get(i);
@@ -106,12 +110,22 @@ public class AroundSlf4jMethodVisitor extends TreeTranslator {
         return listBuffer.toList();
     }
 
+    /**
+     * 根据方法签名拼装生成的打印日志内容
+     * @param methodDecl
+     * @return
+     */
     private String genMethodNameLogFormat(JCTree.JCMethodDecl methodDecl){
 
         return methodDecl.sym.owner.getSimpleName() + methodDecl.getName().toString();
 
     }
 
+    /**
+     * 根据方法入参列表生成打印日志参数内容
+     * @param methodParam
+     * @return
+     */
     private String genParamsLogFormat(List<JCTree.JCVariableDecl> methodParam){
 
         StringBuilder format = new StringBuilder();
